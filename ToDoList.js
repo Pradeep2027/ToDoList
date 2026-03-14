@@ -43,9 +43,17 @@ function loadData(){
     itemJsonArray = JSON.parse(itemJsonArrayStr);
     let str = "";
     itemJsonArray.forEach((element,index) => {
-        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td><td><button class='btn btn-danger btn-sm ms-2' onclick="deleteTodo(${index})" >Delete</button></td></tr>`
+        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td><td><input type="checkbox" value="done" ${element[2]} disabled></td><td><button id="set${index}" class='btn btn-success btn-sm me-2' onclick="setToDo(${index})" ></button><button class='btn btn-danger btn-sm ms-2' onclick="deleteTodo(${index})" >Delete</button></td></tr>`
     });
     tableBody.innerHTML = str;
+    updateCheckTodoButtons();
+}
+
+// function to mark ToDo's done or not
+function updateCheckTodoButtons() {
+    for (i = 0; i < l; i++) {
+        document.getElementById("set"+i).innerHTML=(itemJsonArray[i][2] == "checked") ? "Uncheck" : "Check";
+    }
 }
 
 //function to delete single ToDo
@@ -71,4 +79,14 @@ function clearListFun(){
     localStorage.removeItem('itemsJson');
     tableBody.innerHTML = "";
     clearListButton.style.display = "none";
+}
+
+function setToDo(index){
+    itemJsonArrayStr = localStorage.getItem('itemsJson');
+    itemJsonArray = JSON.parse(itemJsonArrayStr);
+    let item = itemJsonArray[index];
+    if(item[2] == "unchecked")    itemJsonArray[index] = ([item[0],item[1],"checked"]);
+    else    itemJsonArray[index] = ([item[0],item[1],"unchecked"]);
+    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+    loadData();
 }
