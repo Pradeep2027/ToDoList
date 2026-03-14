@@ -1,5 +1,11 @@
 const tableBody = document.getElementById('tbody');
 
+function load()   {
+    if (localStorage.getItem('itemsJson') != null)  {
+        loadData();
+    }
+}
+
 let addButton = document.getElementById("add");
 add.addEventListener('click', () => {
     title = document.getElementById('title');
@@ -26,7 +32,15 @@ function loadData(){
     itemJsonArray = JSON.parse(itemJsonArrayStr);
     let str = "";
     itemJsonArray.forEach((element,index) => {
-        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td></tr>`
+        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td><td><button class='btn btn-danger btn-sm ms-2' onclick="deleteTodo(${index})" >Delete</button></td></tr>`
     });
     tableBody.innerHTML = str;
+}
+
+function deleteTodo(index){
+    itemJsonArrayStr = localStorage.getItem('itemsJson');
+    itemJsonArray = JSON.parse(itemJsonArrayStr);
+    itemJsonArray.splice(index,1);
+    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+    loadData();
 }
