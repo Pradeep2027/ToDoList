@@ -3,10 +3,6 @@ const tableBody = document.getElementById('tbody');
 function load()   {
     if (localStorage.getItem('itemsJson') != null)  {
         loadData();
-        clearListButton.style.display = "inline-block";
-    }
-    else {
-        clearListButton.style.display = "none";
     }
 }
 
