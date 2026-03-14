@@ -1,11 +1,20 @@
 const tableBody = document.getElementById('tbody');
+const clearListButton = document.getElementById('clearList');
+let l;
 
+// Function called on load of page
 function load()   {
     if (localStorage.getItem('itemsJson') != null)  {
+        l = JSON.parse(localStorage.getItem('itemsJson')).length;
         loadData();
+        clearListButton.style.display = "inline-block";
+    }
+    else {
+        clearListButton.style.display = "none";
     }
 }
 
+// Add ToDo Item to list by adding eventListener
 let addButton = document.getElementById("add");
 add.addEventListener('click', () => {
     title = document.getElementById('title');
@@ -24,7 +33,9 @@ add.addEventListener('click', () => {
     }
     title.value = null;
     description.value = null;
+    l++;
     loadData();
+    clearListButton.style.display = "inline-block";
 });
 
 function loadData(){
@@ -37,10 +48,27 @@ function loadData(){
     tableBody.innerHTML = str;
 }
 
+//function to delete single ToDo
 function deleteTodo(index){
     itemJsonArrayStr = localStorage.getItem('itemsJson');
     itemJsonArray = JSON.parse(itemJsonArrayStr);
     itemJsonArray.splice(index,1);
     localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
-    loadData();
+    --l;
+    if(l == 0)  clearListFun();
+    else    loadData();
+}
+
+clearList.addEventListener('click', () => {
+    if(confirm("Do You really want to clear the whole list"))   {
+        clearListFun();
+        l = 0;
+    }
+});
+
+// function to clear the entire ToDo List
+function clearListFun(){
+    localStorage.removeItem('itemsJson');
+    tableBody.innerHTML = "";
+    clearListButton.style.display = "none";
 }
