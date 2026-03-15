@@ -21,11 +21,12 @@
     <div class="mx-5 my-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" id="title">
-        <div id="titleHelp" class="form-text">Add an item to the list</div>
+        <div id="titleHelp" class="form-text">Title must contain characters of length 3 to 32</div>
     </div>
     <div class="mx-5 my-3">
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control" id="description" rows="3"></textarea>
+        <div id="descHelp" class="form-text">Description must be less than 50</div>
     </div>
     <button id='add' class="btn btn-primary mx-5 my-3">Add to List</button>
     <button id='clearList' class="btn btn-danger mx-5 my-3">Clear List</button>
