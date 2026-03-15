@@ -1,5 +1,6 @@
 const tableBody = document.getElementById('tbody');
 const clearListButton = document.getElementById('clearList');
+const resetListButton = document.getElementById('resetList');
 let l;
 
 // Function called on load of page
@@ -8,9 +9,11 @@ function load()   {
         l = JSON.parse(localStorage.getItem('itemsJson')).length;
         loadData();
         clearListButton.style.display = "inline-block";
+        resetListButton.style.display = "inline-block";
     }
     else {
         clearListButton.style.display = "none";
+        resetListButton.style.display = "none";
     }
 }
 
@@ -36,6 +39,7 @@ add.addEventListener('click', () => {
     l++;
     loadData();
     clearListButton.style.display = "inline-block";
+    resetListButton.style.display = "inline-block";
 });
 
 function loadData(){
@@ -43,9 +47,17 @@ function loadData(){
     itemJsonArray = JSON.parse(itemJsonArrayStr);
     let str = "";
     itemJsonArray.forEach((element,index) => {
-        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td><td><button class='btn btn-danger btn-sm ms-2' onclick="deleteTodo(${index})" >Delete</button></td></tr>`
+        str += `<tr> <th scope='row'>${index+1}</th> <td>${element[0]}</td> <td>${element[1]}</td><td><input type="checkbox" value="done" ${element[2]} disabled></td><td><button id="set${index}" class='btn btn-success btn-sm me-2' onclick="setToDo(${index})" ></button><button class='btn btn-danger btn-sm ms-2' onclick="deleteTodo(${index})" >Delete</button></td></tr>`
     });
     tableBody.innerHTML = str;
+    updateCheckTodoButtons();
+}
+
+// function to mark ToDo's done or not
+function updateCheckTodoButtons() {
+    for (i = 0; i < l; i++) {
+        document.getElementById("set"+i).innerHTML=(itemJsonArray[i][2] == "checked") ? "Uncheck" : "Check";
+    }
 }
 
 //function to delete single ToDo
@@ -59,8 +71,8 @@ function deleteTodo(index){
     else    loadData();
 }
 
-clearList.addEventListener('click', () => {
-    if(confirm("Do You really want to clear the whole list"))   {
+clearListButton.addEventListener('click', () => {
+    if (confirm("Please confirm if you want to clear the whole list"))   {
         clearListFun();
         l = 0;
     }
@@ -71,4 +83,35 @@ function clearListFun(){
     localStorage.removeItem('itemsJson');
     tableBody.innerHTML = "";
     clearListButton.style.display = "none";
+    resetListButton.style.display = "none";
+}
+
+function setToDo(index){
+    itemJsonArrayStr = localStorage.getItem('itemsJson');
+    itemJsonArray = JSON.parse(itemJsonArrayStr);
+    let item = itemJsonArray[index];
+    if(item[2] == "unchecked")  {
+        itemJsonArray[index] = ([item[0],item[1],"checked"]);
+        resetListButton.style.display = "inline-block";
+    }
+    else    itemJsonArray[index] = ([item[0],item[1],"unchecked"]);
+    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+    loadData();
+}
+
+resetListButton.addEventListener('click', () => {
+    if (confirm("Please confirm if you want to clear the whole list"))   {
+        resetListFun();
+    }
+});
+
+function resetListFun() {
+    itemJsonArrayStr = localStorage.getItem('itemsJson');
+    itemJsonArray = JSON.parse(itemJsonArrayStr);
+    itemJsonArray.forEach((element) => {
+        element[2] = "unchecked";       
+    });
+    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+    loadData();
+    resetListButton.style.display = "none";
 }
