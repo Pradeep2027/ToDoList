@@ -3,6 +3,25 @@ const clearListButton = document.getElementById('clearList');
 const resetListButton = document.getElementById('resetList');
 let l;
 
+function validateInput(title,description) {
+    if (!title || title.trim() === "")  {
+        alert("Error: Title is required and cannot be empty");
+        return false;
+    }
+    
+    let titleLength = title.trim().length;
+    if (titleLength < 3 || titleLength > 32)   {
+        alert("Error: Title must contains atleast 3 to 32 characters");
+        return false;
+    }
+
+    if (description && description.trim().length > 50) {
+        alert("Error: Decription must be less than 50 characters");
+        return false;
+    }
+    return true;
+}
+
 // Function called on load of page
 function load()   {
     if (localStorage.getItem('itemsJson') != null)  {
@@ -22,6 +41,7 @@ let addButton = document.getElementById("add");
 add.addEventListener('click', () => {
     title = document.getElementById('title');
     description = document.getElementById('description');
+    if (!validateInput(title.value, description.value)) return;
     let itemJsonArray;
     if(localStorage.getItem('itemsJson') == null)   {
         itemJsonArray = [];
@@ -36,7 +56,7 @@ add.addEventListener('click', () => {
     }
     title.value = null;
     description.value = null;
-    l++;
+    ++l;
     loadData();
     clearListButton.style.display = "inline-block";
     resetListButton.style.display = "inline-block";
