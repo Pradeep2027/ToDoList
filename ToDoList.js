@@ -90,7 +90,10 @@ function setToDo(index){
     itemJsonArrayStr = localStorage.getItem('itemsJson');
     itemJsonArray = JSON.parse(itemJsonArrayStr);
     let item = itemJsonArray[index];
-    if(item[2] == "unchecked")    itemJsonArray[index] = ([item[0],item[1],"checked"]);
+    if(item[2] == "unchecked")  {
+        itemJsonArray[index] = ([item[0],item[1],"checked"]);
+        resetListButton.style.display = "inline-block";
+    }
     else    itemJsonArray[index] = ([item[0],item[1],"unchecked"]);
     localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
     loadData();
